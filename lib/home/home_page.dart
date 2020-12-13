@@ -1,11 +1,14 @@
-import 'package:conversor_de_moedas/data/provider/hg_provider.dart';
 import 'package:conversor_de_moedas/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'home_widgets.dart';
 
 class HomePage extends StatelessWidget {
 
   final controller = Get.put(HomeController());
+  TextEditingController reais = TextEditingController();
+  TextEditingController dolares = TextEditingController();
+  TextEditingController euros = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,32 +21,48 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () {},
+            onPressed: _resetFields,
           )
         ],
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder<Map>(
-          future: controller.getdados(),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return Center(
-                    child: CircularProgressIndicator()
-                );
-              default:
-                if (snapshot.hasError) {
-                  return Center(
-                      child: Text('Houve algum erro com a obtenção dos dados!')
-                  );
-                } else {
-                  return Container();
-                }
-            }
-          }
-        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Icon(Icons.monetization_on, size: 150.0, color: Colors.amber),
+            Campo('Reais', 'R\$', reais, _onChangeReal),
+            Divider(color: Colors.white),
+            Campo('Dólares', 'US\$', dolares, _onChangeDollar),
+            Divider(color: Colors.white),
+            Campo('Euros','€\$', euros, _onChangeEuros),
+            Divider(color: Colors.white)
+          ],
+        )
       )
     );
+  }
+
+  void _onChangeReal(String valor){
+    controller.convertereais(valor);
+    dolares.text = controller.valordolar;
+    euros.text = controller.valoreuros;
+  }
+
+  void _onChangeDollar(String valor){
+    controller.convertedollar(valor);
+    reais.text = controller.valorreais;
+    euros.text = controller.valoreuros;
+  }
+
+  void _onChangeEuros(String valor){
+    controller.converteeuro(valor);
+    reais.text = controller.valorreais;
+    dolares.text = controller.valordolar;
+  }
+
+  void _resetFields() {
+    reais.text = '';
+    dolares.text = '';
+    euros.text = '';
   }
 }

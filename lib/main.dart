@@ -9,7 +9,9 @@ void main() {
       title: 'Conversor de moedas com GetX',
       initialRoute: '/',
       theme: ThemeData(
-          backgroundColor: Colors.black
+        hintColor: Colors.amber,
+        primaryColor: Colors.white,
+        backgroundColor: Colors.black
       ),
       getPages: [
         GetPage(name: '/', page: () => HomePage(), binding: HomeBinding())
